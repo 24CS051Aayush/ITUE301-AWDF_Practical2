@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/NavBar';
-import Header from './components/Header';
-import About from './components/About';
-import Skills from './components/Skills';
+import Home from './components/Home';
 import Projects from './components/Projects';
+import Contact from './components/Contact';
+import NotFound from './components/NotFound';
 import Footer from './components/Footer';
 import './App.css';
 
 function App() {
-  const [activeSection, setActiveSection] = useState('about');
-  const [themeColor, setThemeColor] = useState('#1d4ed8');
+  // useState variable for dark/light mode theme toggle across entire application
+  const [darkMode, setDarkMode] = useState(false);
 
-  // Student and portfolio data passed via props
+  // Student and academic portfolio data
   const studentInfo = {
     name: 'Aayush Malhotra',
     id: '24CS051',
@@ -23,95 +24,61 @@ function App() {
     bio: 'Third-year B.Tech Computer Science and Engineering student at CSPIT, Charusat. Passionate about modern web architecture, component-driven design, and building scalable full-stack web applications. Currently mastering React, Vite, Node.js, and advanced development frameworks through hands-on coursework.',
   };
 
-  // Skills array passed to Skills component via props
+  // Skills array passed to Home -> Skills component via props
   const skills = [
-    'React.js',
+    'React.js (React Router v6)',
+    'State Management (useState)',
     'JavaScript (ES6+)',
     'JSX & Component Architecture',
+    'Controlled Forms & Real-time Binding',
     'HTML5 & Modern CSS3',
     'Vite Build Tool',
     'Node.js & npm',
     'Git & GitHub Workflow',
-    'Responsive Web Design',
   ];
 
-  // Projects list passed to Projects component via props
+  // Connected projects list maintaining thread across practicals
   const projects = [
     {
-      title: 'Student Portfolio Platform',
+      title: 'Practical 1: Student Portfolio Platform',
       description: 'Component-based static portfolio built using Vite and React, demonstrating modular architecture and dynamic prop passing.',
       tech: ['React', 'Vite', 'CSS3', 'JSX'],
       status: 'Completed (Prac 1)',
     },
     {
-      title: 'Interactive Task & LifeCycle Manager',
-      description: 'Stateful React application demonstrating component lifecycles, state management, and real-time UI synchronization.',
-      tech: ['React', 'State Hooks', 'Lifecycle Methods'],
-      status: 'In Progress (Prac 2-3)',
+      title: 'Practical 2: SPA Routing & State Management',
+      description: 'Multi-page single-page application with client-side routing (React Router v6), controlled form inputs, dynamic state toggling, and live previews.',
+      tech: ['React Router v6', 'useState', 'SPA Navigation', 'Controlled Forms'],
+      status: 'Current (Prac 2)',
     },
     {
-      title: 'Full-Stack Developer Portal',
-      description: 'Integrated multi-tier application with RESTful APIs, form validation, database connectivity, and secure authentication.',
-      tech: ['MERN Stack', 'Express', 'MongoDB', 'REST API'],
-      status: 'Planned (Full Project)',
+      title: 'Practical 3-13: Full-Stack Developer Platform',
+      description: 'Progressive end-product expanding into component lifecycles, hooks, context API, backend Express/MongoDB integration, and deployment.',
+      tech: ['MERN Stack', 'Express.js', 'MongoDB', 'REST APIs'],
+      status: 'Upcoming Modules',
     },
   ];
 
-  const handleNavClick = (sectionId) => {
-    setActiveSection(sectionId);
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
   };
 
   return (
-    <div className="portfolio-app">
-      {/* Navigation Component */}
-      <NavBar activeSection={activeSection} onNavClick={handleNavClick} />
+    <div className={`portfolio-app ${darkMode ? 'dark-theme' : 'light-theme'}`}>
+      {/* Navigation bar with route Links and theme toggle */}
+      <NavBar darkMode={darkMode} onToggleTheme={toggleDarkMode} />
 
+      {/* Main Single Page Application Route Outlet */}
       <main className="portfolio-container">
-        {/* Theme Picker elevation (demonstrating prop changes live) */}
-        <div className="theme-bar">
-          <span className="theme-label">Select Header Theme:</span>
-          <button
-            type="button"
-            className={`color-dot blue ${themeColor === '#1d4ed8' ? 'selected' : ''}`}
-            onClick={() => setThemeColor('#1d4ed8')}
-            title="Royal Blue"
-          />
-          <button
-            type="button"
-            className={`color-dot teal ${themeColor === '#0f766e' ? 'selected' : ''}`}
-            onClick={() => setThemeColor('#0f766e')}
-            title="Teal"
-          />
-          <button
-            type="button"
-            className={`color-dot slate ${themeColor === '#334155' ? 'selected' : ''}`}
-            onClick={() => setThemeColor('#334155')}
-            title="Slate"
-          />
-        </div>
-
-        {/* Header Component receiving name and themeColor props */}
-        <Header
-          title="Student Developer Portfolio"
-          name={`${studentInfo.name} (${studentInfo.id})`}
-          themeColor={themeColor}
-        />
-
-        {/* About Component */}
-        <About
-          bio={studentInfo.bio}
-          department={studentInfo.department}
-          institution={studentInfo.institution}
-        />
-
-        {/* Skills Component receiving skillList prop */}
-        <Skills skillList={skills} />
-
-        {/* Projects Component receiving projectList prop */}
-        <Projects projectList={projects} />
+        <Routes>
+          <Route path="/" element={<Home studentInfo={studentInfo} skills={skills} />} />
+          <Route path="/projects" element={<Projects projectList={projects} />} />
+          <Route path="/contact" element={<Contact studentInfo={studentInfo} />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
 
-      {/* Footer Component receiving academic metadata props */}
+      {/* Academic Footer */}
       <Footer
         studentId={studentInfo.id}
         academicYear={studentInfo.academicYear}

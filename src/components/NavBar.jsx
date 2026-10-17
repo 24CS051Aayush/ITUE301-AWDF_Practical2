@@ -1,29 +1,52 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-function NavBar({ activeSection, onNavClick }) {
-  const navItems = [
-    { id: 'about', label: 'About' },
-    { id: 'skills', label: 'Skills' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'contact', label: 'Contact' },
-  ];
-
+function NavBar({ darkMode, onToggleTheme }) {
   return (
     <nav className="navbar">
-      <div className="nav-brand">Portfolio</div>
+      <div className="nav-brand">
+        <NavLink to="/">Portfolio <span>SPA</span></NavLink>
+      </div>
+
       <ul className="nav-links">
-        {navItems.map((item) => (
-          <li key={item.id}>
-            <a
-              href={`#${item.id}`}
-              className={activeSection === item.id ? 'active' : ''}
-              onClick={() => onNavClick && onNavClick(item.id)}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
+        <li>
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/projects"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Projects
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/contact"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Contact
+          </NavLink>
+        </li>
       </ul>
+
+      {/* Dark/Light mode toggle using useState */}
+      <div className="nav-actions">
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          onClick={onToggleTheme}
+          title="Toggle Dark / Light Mode"
+        >
+          {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        </button>
+      </div>
     </nav>
   );
 }
